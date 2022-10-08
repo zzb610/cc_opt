@@ -1,5 +1,5 @@
-#ifndef CCOPT_CHROMO_H
-#define CCOPT_CHROMO_H
+#pragma once
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -7,6 +7,7 @@
 #include <vector>
 namespace cc_opt {
 
+namespace ga {
 struct BinaryChromo {
   BinaryChromo() = default;
   BinaryChromo(const std::string &gene) : gene(gene), fitness(0) {}
@@ -21,9 +22,10 @@ struct FloatChromo {
   double fitness;
 };
 
-std::vector<double> Decode(const BinaryChromo &bin_chromo, int64_t seg_len,
-                           const std::vector<double> &lower_bound,
-                           const std::vector<double> &upper_bound) {
+inline std::vector<double> Decode(const BinaryChromo &bin_chromo,
+                                  int64_t seg_len,
+                                  const std::vector<double> &lower_bound,
+                                  const std::vector<double> &upper_bound) {
 
   assert(upper_bound > lower_bound);
 
@@ -46,9 +48,9 @@ std::vector<double> Decode(const BinaryChromo &bin_chromo, int64_t seg_len,
   return features;
 }
 
-std::vector<double> Decode(const FloatChromo &f_chromo,
-                           const std::vector<double> &lower_bound,
-                           const std::vector<double> &upper_bound) {
+inline std::vector<double> Decode(const FloatChromo &f_chromo,
+                                  const std::vector<double> &lower_bound,
+                                  const std::vector<double> &upper_bound) {
 
   int64_t n_gene = f_chromo.gene.size();
 
@@ -64,6 +66,6 @@ std::vector<double> Decode(const FloatChromo &f_chromo,
 
   return features;
 }
+} // namespace ga
 
 } // namespace cc_opt
-#endif /* CCOPT_CHROMO_H */

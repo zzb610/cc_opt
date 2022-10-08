@@ -1,5 +1,4 @@
-#ifndef OPERATOR_H
-#define OPERATOR_H
+#pragma once
 
 #include "chromo.h"
 
@@ -13,6 +12,7 @@
 
 namespace cc_opt {
 
+namespace ga {
 template <typename FloatTy>
 inline std::vector<FloatTy> GenRandomFloatVec(int64_t size, double lower_bound,
                                               double upper_bound) {
@@ -134,7 +134,6 @@ inline void SelectTournament(std::vector<ChromoTy> &population,
 
   population = next_population;
 }
+} // namespace ga
 
 } // namespace cc_opt
-
-#endif /* OPERATOR_H */

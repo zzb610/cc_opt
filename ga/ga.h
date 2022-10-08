@@ -1,5 +1,4 @@
-#ifndef CCOPT_GA_H
-#define CCOPT_GA_H
+#pragma once
 
 #include "chromo.h"
 #include "operator.h"
@@ -11,15 +10,18 @@
 #include <iostream>
 #include <vector>
 
+namespace cc_opt {
+
+namespace ga {
+
 constexpr int64_t kEarlyStopIter = 100;
 
-namespace cc_opt {
-template <typename CostFuncTy, typename ChromoType>
-class GABase {
+template <typename CostFuncTy, typename ChromoType> class GABase {
 public:
   GABase(CostFuncTy cost_func, int64_t n_features, int64_t size_pop,
-      int64_t max_iter, double prob_mut, const std::vector<double> &lower_bound,
-      const std::vector<double> &upper_bound, bool early_stop)
+         int64_t max_iter, double prob_mut,
+         const std::vector<double> &lower_bound,
+         const std::vector<double> &upper_bound, bool early_stop)
       : cost_func_(cost_func), n_features_(n_features), size_pop_(size_pop),
         max_iter_(max_iter), prob_mut_(prob_mut), lower_bound_(lower_bound),
         upper_bound_(upper_bound), early_stop_(early_stop) {
@@ -101,17 +103,18 @@ template <typename CostFuncTy>
 class GA : public GABase<CostFuncTy, BinaryChromo> {
 public:
   GA(CostFuncTy cost_func, int64_t n_features, int64_t size_pop,
-      int64_t max_iter, double prob_mut, double remain_rate,
-      const std::vector<double> &lower_bound,
-      const std::vector<double> &upper_bound, bool early_stop, int64_t seg_len)
+     int64_t max_iter, double prob_mut, double remain_rate,
+     const std::vector<double> &lower_bound,
+     const std::vector<double> &upper_bound, bool early_stop, int64_t seg_len)
       : GABase<CostFuncTy, BinaryChromo>(cost_func, n_features, size_pop,
-            max_iter, prob_mut, lower_bound, upper_bound, early_stop),
+                                         max_iter, prob_mut, lower_bound,
+                                         upper_bound, early_stop),
         remain_rate_(remain_rate), seg_len_(seg_len) {}
 
   double GetChromoFit(const BinaryChromo &chromo) override final {
 
-    auto features = Decode(
-        chromo, seg_len_, this->lower_bound_, this->upper_bound_);
+    auto features =
+        Decode(chromo, seg_len_, this->lower_bound_, this->upper_bound_);
 
     auto cost = this->cost_func_(features);
     // mini cost
@@ -147,8 +150,8 @@ public:
       auto parent_b_idx =
           GetRandomInt<int64_t>(0, this->population_.size() - 1);
 
-      auto childs = Crossover2Point(
-          this->population_[parent_a_idx], this->population_[parent_b_idx]);
+      auto childs = Crossover2Point(this->population_[parent_a_idx],
+                                    this->population_[parent_b_idx]);
       for (auto &child : childs) {
         child.fitness = this->GetChromoFit(child);
         this->population_.push_back(child);
@@ -176,17 +179,17 @@ template <typename CostFuncTy>
 class FloatGA : public GABase<CostFuncTy, FloatChromo> {
 public:
   FloatGA(CostFuncTy cost_func, int64_t n_features, int64_t size_pop,
-      int64_t max_iter, double prob_mut, double remain_rate,
-      const std::vector<double> &lower_bound,
-      const std::vector<double> &upper_bound, bool early_stop)
+          int64_t max_iter, double prob_mut, double remain_rate,
+          const std::vector<double> &lower_bound,
+          const std::vector<double> &upper_bound, bool early_stop)
       : GABase<CostFuncTy, FloatChromo>(cost_func, n_features, size_pop,
-            max_iter, prob_mut, lower_bound, upper_bound, early_stop),
+                                        max_iter, prob_mut, lower_bound,
+                                        upper_bound, early_stop),
         remain_rate_(remain_rate) {}
 
   double GetChromoFit(const FloatChromo &chromo) override final {
 
-    auto features =
-        cc_opt::Decode(chromo, this->lower_bound_, this->upper_bound_);
+    auto features = Decode(chromo, this->lower_bound_, this->upper_bound_);
 
     auto cost = this->cost_func_(features);
 
@@ -220,8 +223,8 @@ public:
       auto parent_b_idx =
           GetRandomInt<int64_t>(0, this->population_.size() - 1);
 
-      auto childs = Crossover2Point(
-          this->population_[parent_a_idx], this->population_[parent_b_idx]);
+      auto childs = Crossover2Point(this->population_[parent_a_idx],
+                                    this->population_[parent_b_idx]);
       for (auto &child : childs) {
         child.fitness = GetChromoFit(child);
         this->population_.push_back(child);
@@ -236,14 +239,13 @@ public:
     }
   }
 
-  std::vector<double> DecodeChromo(const FloatChromo &chromo) override final{
+  std::vector<double> DecodeChromo(const FloatChromo &chromo) override final {
     return Decode(chromo, this->lower_bound_, this->upper_bound_);
   }
 
 private:
   double remain_rate_;
 };
+} // namespace ga
 
 } // namespace cc_opt
-
-#endif /* CCOPT_GA_H */

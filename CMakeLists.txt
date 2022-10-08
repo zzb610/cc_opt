@@ -16,5 +16,5 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_BUILD_TYPE Debug)
 
 add_subdirectory(ga)
-
-add_executable(cc_opt main.cc)
+add_subdirectory(pso)
+add_subdirectory(test)

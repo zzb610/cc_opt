@@ -32,7 +32,7 @@ int main(void) {
     return cost;
   };
 
-  cc_opt::GA<decltype(cost_func)> ga(cost_func, n_features, size_pop, max_iter,
+  cc_opt::ga::GA<decltype(cost_func)> ga(cost_func, n_features, size_pop, max_iter,
                                      prob_mut, remain_rate, lower_bound,
                                      upper_bound, early_stop, seg_len);
 
