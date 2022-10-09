@@ -20,7 +20,7 @@ int main(void) {
 
   cc_opt::pso::PSOParam param;
   param.n_features = 2;
-  param.size_pop = 50;
+  param.size_pop = 500;
   param.max_iter = 300;
   param.person_learning_factor = 2;
   param.group_learning_factor = 2;

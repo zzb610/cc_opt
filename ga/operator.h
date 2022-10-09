@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/rand.h"
 #include "chromo.h"
 
 #include <algorithm>
@@ -13,61 +14,6 @@
 namespace cc_opt {
 
 namespace ga {
-template <typename FloatTy>
-inline std::vector<FloatTy> GenRandomFloatVec(int64_t size, double lower_bound,
-                                              double upper_bound) {
-  // engine
-  std::random_device seed;
-  std::ranlux48 rand_engine(seed());
-  // distribution
-  std::uniform_real_distribution<FloatTy> dist(lower_bound, upper_bound);
-
-  auto gen = [&dist, &rand_engine]() { return dist(rand_engine); };
-
-  std::vector<FloatTy> vec(size);
-  std::generate(vec.begin(), vec.end(), gen);
-
-  return vec;
-}
-
-template <typename IntTy>
-inline std::vector<IntTy> GenRandomIntVec(int64_t size, int64_t lower_bound,
-                                          int64_t upper_bound) {
-  // engine
-  std::random_device seed;
-  std::ranlux48 rand_engine(seed());
-  // distribution
-  std::uniform_int_distribution<IntTy> dist(lower_bound, upper_bound);
-
-  auto gen = [&dist, &rand_engine]() { return dist(rand_engine); };
-
-  std::vector<IntTy> vec(size);
-  std::generate(vec.begin(), vec.end(), gen);
-
-  return vec;
-}
-
-template <typename FloatTy>
-inline FloatTy GetRandomFloat(double lower_bound, double upper_bound) {
-  // engine
-  std::random_device seed;
-  std::ranlux48 rand_engine(seed());
-  // distribution
-  std::uniform_real_distribution<FloatTy> dist(lower_bound, upper_bound);
-
-  return dist(rand_engine);
-}
-
-template <typename IntTy>
-inline IntTy GetRandomInt(int64_t lower_bound, int64_t upper_bound) {
-  // engine
-  std::random_device seed;
-  std::ranlux48 rand_engine(seed());
-  // distribution
-  std::uniform_int_distribution<IntTy> dist(lower_bound, upper_bound);
-
-  return dist(rand_engine);
-}
 
 inline void BinaryMutate(BinaryChromo &chromo, double mut_rate) {
   int64_t n_genes = chromo.gene.size();

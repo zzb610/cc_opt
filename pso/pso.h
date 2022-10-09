@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rand.h"
+#include "utils/rand.h"
 
 #include <cassert>
 #include <cstdint>
@@ -82,8 +82,12 @@ public:
     best_cost_ = -GetFitness(group_best_.position);
     Particle best_particle = group_best_;
 
-    std::vector<std::vector<double>> velocity(
-        size_pop_, std::vector<double>(n_features_, 0));
+    std::vector<std::vector<double>> velocity;
+    for (int64_t i = 0; i < size_pop_; ++i) {
+      auto vel = GenRandomFloatVec<double>(n_features_, -1, 1);
+      velocity.push_back(std::move(vel));
+    }
+
     for (int64_t iter = 0; iter < max_iter_; ++iter) {
       for (int64_t i = 0; i < size_pop_; ++i) {
         for (int64_t j = 0; j < n_features_; ++j) {
@@ -99,8 +103,14 @@ public:
           // update personal position and fitness
           population_[i].position[j] =
               population_[i].position[j] + velocity[i][j] * time_step;
-          population_[i].fitness = GetFitness(population_[i].position);
+
+          population_[i].position[j] =
+              std::min(population_[i].position[j], upper_bound_[j]);
+          population_[i].position[j] =
+              std::max(population_[i].position[j], lower_bound_[j]);
         }
+        population_[i].fitness = GetFitness(population_[i].position);
+
         // update personal best
         if (population_[i].fitness > person_best_[i].fitness) {
           person_best_[i] = population_[i];
@@ -108,10 +118,10 @@ public:
         // update group best
         if (population_[i].fitness > group_best_.fitness) {
           group_best_ = population_[i];
-          best_iter = i;
 
           // update global best
           if (group_best_.fitness > best_particle.fitness) {
+            best_iter = i;
             best_particle = group_best_;
             best_cost_ = -best_particle.fitness;
           }
