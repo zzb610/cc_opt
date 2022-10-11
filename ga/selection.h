@@ -22,7 +22,7 @@ inline void SelectTournament(std::vector<ChromoTy> &population,
     auto candidate_idx =
         GenRandomIntVec<int64_t>(candidate_num, 0, pop_size - 1);
     ChromoTy *winner = &population[candidate_idx[0]];
-    for (int64_t i = 1; i < candidate_idx.size(); ++i) {
+    for (auto i = 1; i < candidate_idx.size(); ++i) {
       int64_t cand_idx = candidate_idx[i];
       if (population[cand_idx].fitness > winner->fitness) {
         winner = &population[cand_idx];

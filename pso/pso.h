@@ -53,7 +53,7 @@ public:
   Particle GetBestParticle() const {
     assert(!population_.empty());
     auto best_particle = population_[0];
-    for (int64_t i = 1; i < population_.size(); ++i) {
+    for (auto i = 1; i < population_.size(); ++i) {
       if (population_[i].fitness > best_particle.fitness) {
         best_particle = population_[i];
       }
@@ -66,7 +66,7 @@ public:
   double GetBestCost() const { return best_cost_; }
 
   void InitPopulation() {
-    for (int64_t i = 0; i < size_pop_; ++i) {
+    for (auto i = 0; i < size_pop_; ++i) {
       auto position =
           GenRandomFloatVec<double>(n_features_, lower_bound_, upper_bound_);
       double fitness = GetFitness(position);
@@ -85,14 +85,14 @@ public:
     Particle best_particle = group_best_;
 
     std::vector<std::vector<double>> velocity;
-    for (int64_t i = 0; i < size_pop_; ++i) {
+    for (auto i = 0; i < size_pop_; ++i) {
       auto vel = GenRandomFloatVec<double>(n_features_, -1, 1);
       velocity.push_back(std::move(vel));
     }
 
-    for (int64_t iter = 0; iter < max_iter_; ++iter) {
-      for (int64_t i = 0; i < size_pop_; ++i) {
-        for (int64_t j = 0; j < n_features_; ++j) {
+    for (auto iter = 0; iter < max_iter_; ++iter) {
+      for (auto i = 0; i < size_pop_; ++i) {
+        for (auto j = 0; j < n_features_; ++j) {
           double r1 = GetRandomFloat<double>(0, 1);
           double r2 = GetRandomFloat<double>(0, 1);
 

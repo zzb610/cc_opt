@@ -18,7 +18,7 @@ inline std::vector<ChromoTy> Crossover2Point(const ChromoTy &parent_a,
   if (begin_idx > end_idx) {
     std::swap(begin_idx, end_idx);
   }
-  for (int64_t i = begin_idx; i < end_idx; ++i) {
+  for (auto i = begin_idx; i < end_idx; ++i) {
     child_a.gene[i] = parent_b.gene.at(i);
     child_b.gene[i] = parent_a.gene.at(i);
   }

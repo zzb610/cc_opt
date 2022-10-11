@@ -33,7 +33,7 @@ inline std::vector<double> Decode(const BinaryChromo &bin_chromo,
   assert(n_gene % seg_len == 0);
   double max_ = std::pow(2, seg_len) - 1;
   std::vector<double> features;
-  for (int64_t i = 0; i < n_gene / seg_len; ++i) {
+  for (auto i = 0; i < n_gene / seg_len; ++i) {
 
     assert(upper_bound[i] > lower_bound[i]);
 
@@ -55,7 +55,7 @@ inline std::vector<double> Decode(const FloatChromo &f_chromo,
   int64_t n_gene = f_chromo.gene.size();
 
   std::vector<double> features;
-  for (int64_t i = 0; i < n_gene; ++i) {
+  for (auto i = 0; i < n_gene; ++i) {
     assert(upper_bound[i] > lower_bound[i]);
 
     double feature_val =
