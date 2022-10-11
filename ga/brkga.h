@@ -3,7 +3,7 @@
 #include "chromo.h"
 #include "crossover.h"
 #include "operator.h"
-#include "rand.h"
+#include "../utils/rand.h"
 
 #include <algorithm>
 #include <cstddef>
