@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 
+#define LOG
+
 namespace cc_opt {
 namespace pso {
 constexpr int64_t kEarlyStopIter = 100;
@@ -121,24 +123,21 @@ public:
 
           // update global best
           if (group_best_.fitness > best_particle.fitness) {
-            best_iter = i;
+            best_iter = iter;
             best_particle = group_best_;
             best_cost_ = -best_particle.fitness;
           }
         }
       }
-      std::cout << "iter: " << iter << " best cost: " << best_cost_ << " ";
 
+#ifdef LOG
+      std::cout << "iter: " << iter << " best cost: " << best_cost_ << "\n";
+#endif
       // print features
-      std::cout << "features: ";
-      for (auto f : best_particle.position) {
-        std::cout << f << " ";
-      }
-      std::cout << " group_best fitness" << group_best_.fitness;
-      std::cout << "\n";
-
       if (early_stop_ && (iter - best_iter) > kEarlyStopIter) {
-        std::cout << "early stop at: " << iter << "\n";
+#ifdef LOG
+        std::cout << "early stop at: " << iter << " get best iter at " << best_iter << "\n";
+#endif
         break;
       }
     }
@@ -147,11 +146,14 @@ public:
   }
 
 private:
-  int64_t size_pop_;
+  CostFuncTy cost_func_;
+
   int64_t max_iter_;
+  bool early_stop_;
+
+  int64_t size_pop_;
   int64_t n_features_;
   int64_t time_step;
-  bool early_stop_;
 
   double person_learning_factor_;
   double group_learning_factor_;
@@ -162,8 +164,6 @@ private:
 
   std::vector<double> best_feature_;
   double best_cost_;
-
-  CostFuncTy cost_func_;
 
   std::vector<Particle> population_;
   std::vector<Particle> person_best_;

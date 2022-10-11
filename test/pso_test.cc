@@ -33,5 +33,11 @@ int main(void) {
   cc_opt::pso::PSO<decltype(cost_func)> pso(cost_func, param);
   pso.Run();
 
+  auto opt_features = pso.GetBestFeature();
+  for (auto feat_val : opt_features) {
+    std::cout << feat_val << "\n";
+  }
+  std::cout << "\n";
+
   return 0;
 }
