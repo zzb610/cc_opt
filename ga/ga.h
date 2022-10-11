@@ -41,8 +41,7 @@ public:
   virtual std::vector<double> GetBestFeature() const = 0;
 
   double GetBestCost() const {
-    auto best_feature = Decode(best_chromo_);
-    return cost_func_(best_feature);
+    return -best_chromo_.fitness;
   }
 
   ChromoType GetBestChromo() {
