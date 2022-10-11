@@ -1,7 +1,7 @@
 #pragma once
 
 #include "chromo.h"
-#include "utils/rand.h"
+#include "rand.h"
 
 namespace cc_opt {
 namespace ga {

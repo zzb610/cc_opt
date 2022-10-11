@@ -1,9 +1,9 @@
 #pragma once
 
 #include "chromo.h"
-#include "ga/crossover.h"
+#include "crossover.h"
 #include "operator.h"
-#include "utils/rand.h"
+#include "rand.h"
 
 #include <algorithm>
 #include <cstddef>
