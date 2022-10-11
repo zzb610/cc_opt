@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/rand.h"
+#include "rand.h"
 
 #include <cstdint>
 #include <vector>
