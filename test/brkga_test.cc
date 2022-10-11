@@ -1,11 +1,8 @@
+#define LOG
+// #define PARALLEL
+
 #include "ga/brkga.h"
 #include <vector>
-
-namespace cc_opt {
-namespace ga {
-#define LOG
-}
-} // namespace cc_opt
 
 constexpr double PI = 3.1415926525;
 
@@ -28,7 +25,7 @@ int main(void) {
   param.inherit_elite_prob = 0.60;
 
   param.max_iter = 500;
-  param.lower_bound = std::vector<double>(param.n_features, 0);
+  param.lower_bound = std::vector<double>(param.n_features, -1.0);
   param.upper_bound = std::vector<double>(param.n_features, 1.0);
 
   cc_opt::ga::BRKGA<decltype(cost_func)> brkga(cost_func, param);

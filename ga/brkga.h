@@ -1,15 +1,16 @@
 #pragma once
 
+#include "../utils/rand.h"
 #include "chromo.h"
 #include "crossover.h"
 #include "operator.h"
-#include "../utils/rand.h"
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <numeric>
+#include <omp.h>
 #include <utility>
 #include <vector>
 
@@ -75,11 +76,17 @@ public:
   }
 
   void InitPopulation() {
+
     for (auto i = 0; i < this->size_pop_; ++i) {
       auto genes = GenRandomFloatVec<double>(n_features_, 0, 1);
       FloatChromo chromo{genes};
-      GetChromoFit(chromo);
       this->population_.push_back(std::move(chromo));
+    }
+#ifdef PARALLEL
+#pragma omp parallel for
+#endif
+    for (auto &chromo : population_) {
+      GetChromoFit(chromo);
     }
     best_chromo_ = population_[0];
   }
@@ -118,16 +125,28 @@ public:
 
       // add mutant to next generation
       int64_t num_mutant = size_pop_ * mutant_rate_;
+
+      std::vector<FloatChromo> mutants;
       for (auto i = 0; i < num_mutant; ++i) {
         auto mutant_genes = GenRandomFloatVec<double>(n_features_, 0, 1);
         FloatChromo mutant{mutant_genes};
+        // GetChromoFit(mutant);
+        mutants.push_back(std::move(mutant));
+      }
+#ifdef PARALLEL
+#pragma omp parallel for
+#endif
+      for (auto &mutant : mutants) {
         GetChromoFit(mutant);
-        new_population.push_back(std::move(mutant));
+      }
+      for (auto &&mutant : mutants) {
+        new_population.push_back(mutant);
       }
 
       // crossover elites and non-elites
       int64_t elite_num = size_pop_ * elite_rate_;
       int64_t num_children = size_pop_ - num_mutant - elite_num;
+      std::vector<FloatChromo> children;
       for (auto i = 0; i < num_children; ++i) {
         auto elite_idx = RandomChoice(elite_indices);
         auto non_elite_idx = RandomChoice(non_elite_indices);
@@ -135,8 +154,17 @@ public:
         auto child =
             CrossoverWithProb(population_[elite_idx],
                               population_[non_elite_idx], inherit_elite_prob_);
+        // GetChromoFit(child);
+        children.push_back(std::move(child));
+      }
+#ifdef PARALLEL
+#pragma omp parallel for
+#endif
+      for (auto &child : children) {
         GetChromoFit(child);
-        new_population.push_back(std::move(child));
+      }
+      for (auto &&child : children) {
+        new_population.push_back(child);
       }
 
       // evolve to next generation
