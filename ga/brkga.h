@@ -14,15 +14,13 @@
 #include <utility>
 #include <vector>
 
-#define LOG
-
 namespace cc_opt {
 namespace ga {
 
 struct BRKGAParam {
 
   int64_t max_iter;
-  bool early_stop = true;
+  int64_t early_stop = 50;
 
   int64_t size_pop;
   double elite_rate;
@@ -181,7 +179,7 @@ public:
       }
 
       // early stop
-      if (early_stop_ && iter - first_best_iter > kEarlyStopIter) {
+      if (early_stop_ != -1 && iter - first_best_iter > early_stop_) {
 #ifdef LOG
         std::cout << "early stop at: " << iter
                   << " get best at: " << first_best_iter << "\n";
@@ -201,7 +199,7 @@ private:
   CostFuncTy cost_func_;
 
   int64_t max_iter_;
-  bool early_stop_;
+  int64_t early_stop_;
 
   int64_t size_pop_;
   double elite_rate_;

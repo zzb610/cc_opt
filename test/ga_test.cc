@@ -1,3 +1,4 @@
+#define LOG
 #include "ga/ga.h"
 
 #include <cmath>
@@ -46,7 +47,7 @@ int main(void) {
   param.remain_rate = 0.5;
   param.lower_bound = std::vector<double>(param.n_features, -1.0);
   param.upper_bound = std::vector<double>(param.n_features, 1.0);
-  param.early_stop = true;
+  param.early_stop = 20;
   cc_opt::ga::FloatGA<decltype(cost_func)> float_ga(cost_func, param);
 
   float_ga.Run();

@@ -1,3 +1,4 @@
+#define LOG
 #include "pso/pso.h"
 
 #include <cmath>
@@ -28,7 +29,7 @@ int main(void) {
   param.time_step = 1;
   param.lower_bound = std::vector<double>(2, -1.0);
   param.upper_bound = std::vector<double>(2, 1.0);
-  param.early_stop = true;
+  param.early_stop = 20;
 
   cc_opt::pso::PSO<decltype(cost_func)> pso(cost_func, param);
   pso.Run();

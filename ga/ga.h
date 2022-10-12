@@ -12,8 +12,6 @@
 #include <utility>
 #include <vector>
 
-#define LOG
-
 namespace cc_opt {
 
 namespace ga {
@@ -23,7 +21,7 @@ public:
   GABase(CostFuncTy cost_func, int64_t n_features, int64_t size_pop,
          int64_t max_iter, double prob_mut,
          const std::vector<double> &lower_bound,
-         const std::vector<double> &upper_bound, bool early_stop)
+         const std::vector<double> &upper_bound, int64_t early_stop)
       : cost_func_(cost_func), n_features_(n_features), size_pop_(size_pop),
         max_iter_(max_iter), prob_mut_(prob_mut), lower_bound_(lower_bound),
         upper_bound_(upper_bound), early_stop_(early_stop) {
@@ -67,7 +65,7 @@ public:
         first_best_iter = iter;
       }
 
-      if (this->early_stop_ && iter - first_best_iter >= kEarlyStopIter) {
+      if (this->early_stop_ != -1 && iter - first_best_iter >= early_stop_) {
 #ifdef LOG
         std::cout << "early stop at: " << iter
                   << " get best at: " << first_best_iter << "\n";
@@ -86,7 +84,7 @@ protected:
   CostFuncTy cost_func_;
 
   int64_t max_iter_;
-  bool early_stop_;
+  int64_t early_stop_;
 
   int64_t size_pop_;
   double prob_mut_;
@@ -101,7 +99,7 @@ protected:
 
 struct GAParam {
   int64_t max_iter;
-  bool early_stop = true;
+  int64_t early_stop = 50;
 
   int64_t size_pop;
   double remain_rate;
@@ -185,7 +183,7 @@ private:
 
 struct FloatGAParam {
   int64_t max_iter;
-  bool early_stop = true;
+  int64_t early_stop = 50;
 
   int64_t size_pop;
   double remain_rate;

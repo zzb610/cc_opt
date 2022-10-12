@@ -7,11 +7,8 @@
 #include <iostream>
 #include <vector>
 
-#define LOG
-
 namespace cc_opt {
 namespace pso {
-constexpr int64_t kEarlyStopIter = 100;
 
 struct Particle {
   Particle() = default;
@@ -31,7 +28,7 @@ struct PSOParam {
   int64_t time_step;
   std::vector<double> lower_bound;
   std::vector<double> upper_bound;
-  bool early_stop;
+  int64_t early_stop;
 };
 
 template <typename CostFuncTy> class PSO {
@@ -134,7 +131,7 @@ public:
       std::cout << "iter: " << iter << " best cost: " << best_cost_ << "\n";
 #endif
       // print features
-      if (early_stop_ && (iter - best_iter) > kEarlyStopIter) {
+      if (early_stop_ != -1 && (iter - best_iter) > early_stop_) {
 #ifdef LOG
         std::cout << "early stop at: " << iter << " get best iter at " << best_iter << "\n";
 #endif
@@ -149,7 +146,7 @@ private:
   CostFuncTy cost_func_;
 
   int64_t max_iter_;
-  bool early_stop_;
+  int64_t early_stop_;
 
   int64_t size_pop_;
   int64_t n_features_;
