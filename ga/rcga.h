@@ -41,6 +41,10 @@ public:
                              });
   }
 
+  double GetBestCost() const {
+    return -best_chromo_.fitness;
+  }
+
   void GetChromoFit(FloatChromo &chromo) {
     auto features = Decode(chromo, lower_bound_, upper_bound_);
     auto cost = cost_func_(features);
