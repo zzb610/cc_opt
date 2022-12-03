@@ -1,3 +1,4 @@
+#pragma once
 #include "chromo.h"
 #include "crossover.h"
 #include "operator.h"
