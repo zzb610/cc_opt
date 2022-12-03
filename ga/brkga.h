@@ -73,8 +73,27 @@ public:
     chromo.fitness = -cost;
   }
 
-  void InitPopulation() {
+  void InitPopulation(const std::vector<std::vector<double>> &init_pop) {
+    for (const auto &gene : init_pop) {
+      
+      FloatChromo chromo{gene};
+      this->population_.push_back(std::move(chromo));
+    }
+    auto init_num = init_pop.size();
+    auto random_num = size_pop_ - init_num;
+    for (size_t i = 0; i < random_num; ++i) {
+      auto genes = GenRandomFloatVec<double>(n_features_, 0, 1);
+      FloatChromo chromo{genes};
+      this->population_.push_back(std::move(chromo));
+    }
 
+    for (auto &chromo : population_) {
+      GetChromoFit(chromo);
+    }
+    best_chromo_ = population_[0];
+  }
+
+  void InitPopulation() {
     for (auto i = 0; i < this->size_pop_; ++i) {
       auto genes = GenRandomFloatVec<double>(n_features_, 0, 1);
       FloatChromo chromo{genes};
@@ -106,7 +125,10 @@ public:
   }
 
   void Run() {
-    InitPopulation();
+
+    if (this->population_.empty()) {
+      InitPopulation();
+    }
 
     int64_t first_best_iter = 0;
     for (auto iter = 0; iter < max_iter_; ++iter) {
